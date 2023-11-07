@@ -1,0 +1,33 @@
+.title {
+  display: flex;
+  align-items: center;
+
+  .file-name {
+    font-size: 16px;
+    margin-left: 16px;
+    cursor: default;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+th, td {
+    background-color: #fff !important;
+}
+
+.ant-table-column-sorters {
+  justify-content: flex-start !important;
+  gap: 10px !important;
+
+  .ant-table-column-title {
+    flex: 0;
+    display: inline-block;
+  }
+}
+
+th {
+    position: sticky !important;
+    top: 0;
+    z-index: 100;
+}

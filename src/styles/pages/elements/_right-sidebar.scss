@@ -1,0 +1,35 @@
+.right-sidebar {
+  padding: 8px;
+  gap: 8px;
+  margin-left: -20px;
+  height: 100%;
+  position: relative;
+
+  .app-list {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    &.hide {
+      display: none;
+    }
+  }
+
+  .hide-btn {
+    position: absolute;
+    right: 8px;
+    bottom: 20px;
+    z-index: 5;
+  }
+
+  .show-btn {
+    position: absolute;
+    right: -10px;
+    bottom: 20px;
+    z-index: 1000;
+    background-color: #fff;
+    box-shadow: 0 1px 1px 0 rgba(60, 64, 67, 0.3),
+      0 1px 3px 1px rgba(60, 64, 67, 0.15);
+  }
+}

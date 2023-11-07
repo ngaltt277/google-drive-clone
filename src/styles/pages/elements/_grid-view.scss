@@ -1,0 +1,12 @@
+.grid-view {
+  position: relative;
+
+  .sort {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    position: absolute;
+    right: 0;
+    top: -4px;
+  }
+}

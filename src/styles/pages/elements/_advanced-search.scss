@@ -1,0 +1,15 @@
+.advanced-search {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  .item {
+    display: flex;
+    align-items: center;
+
+    .label {
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
+}

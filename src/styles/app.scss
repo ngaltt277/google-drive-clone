@@ -1,0 +1,47 @@
+@import "components/form/button";
+@import "components/form/input";
+@import "components/form/select";
+@import "components/header";
+@import "components/modal";
+@import "components/grid-item";
+@import "components/popover";
+@import "pages/elements/left-sidebar";
+@import "pages/elements/right-sidebar";
+@import "pages/elements/content";
+@import "pages/elements/grid-view";
+@import "pages/elements/list-view";
+@import "pages/elements/advanced-search";
+@import "pages/my-drive-page";
+
+:root {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f7f9fc;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #fff;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #b6b6b6;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
