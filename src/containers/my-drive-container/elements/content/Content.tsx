@@ -6,44 +6,53 @@ import {
   BarsOutlined,
 } from "@ant-design/icons";
 import { files } from "@/../public/data/folder";
-import { Col, Row } from "antd";
-import { GridView } from "../grid-view";
+import { Row } from "antd";
+import { GridView, ListView } from "../";
 import { useState } from "react";
-import { ListView } from "../list-view";
+import { LayoutEnum } from "@/enums/layout";
 
-export function Content() {
-  const [layout, setLayout] = useState("list");
+type Props = {
+  onToggleShowDetail?: () => void;
+  showDetail?: boolean;
+};
+
+export function Content({ onToggleShowDetail, showDetail }: Props) {
+  const [layout, setLayout] = useState(LayoutEnum.List);
+  const isListLayout = layout === LayoutEnum.List;
 
   const onToggleLayout = () => {
-    setLayout(layout === "list" ? "grid" : "list");
+    setLayout(isListLayout ? LayoutEnum.Grid : LayoutEnum.List);
   };
 
   const renderLayout = () => {
-    if (layout === "grid") {
-      return <GridView />;
+    if (isListLayout) {
+      return <ListView />;
     }
+    return <GridView showDetail={showDetail} />;
+  };
 
-    return <ListView />;
+  const renderLayoutIcon = () => {
+    if (isListLayout) {
+      return <TableOutlined />;
+    }
+    return <BarsOutlined />;
   };
 
   return (
     <div className="content">
       <div className="content-header">
         <div className="title">
-          <p className="broadcrumb">My drive</p>
+          <p className="breadcrumb">My drive</p>
           <div className="layout-details">
             <Button
-              icon={layout === "list" ? <TableOutlined /> : <BarsOutlined />}
+              icon={renderLayoutIcon()}
               size="large"
-              shape="circle"
-              type="text"
               onClick={onToggleLayout}
             />
             <Button
               icon={<InfoCircleOutlined />}
               size="large"
-              shape="circle"
-              type="text"
+              onClick={onToggleShowDetail}
             />
           </div>
         </div>
@@ -59,15 +68,14 @@ export function Content() {
           <div className="recommended-list">
             <Row gutter={[16, 16]}>
               {files.slice(0, 4).map((file) => (
-                <Col key={file.id} lg={6} md={8} sm={12} xs={24}>
-                  <GridItem
-                    type={file.type}
-                    name={file.name}
-                    img={file.img}
-                    hasOptions
-                    recommended
-                  />
-                </Col>
+                <GridItem
+                  key={file.id}
+                  type={file.type}
+                  name={file.name}
+                  img={file.img}
+                  recommended
+                  showDetail={showDetail}
+                />
               ))}
             </Row>
           </div>

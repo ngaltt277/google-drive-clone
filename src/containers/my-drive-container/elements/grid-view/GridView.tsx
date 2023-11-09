@@ -1,54 +1,72 @@
-import { Col, Row } from "antd";
+import { MenuProps, Row } from "antd";
 import { GridItem } from "@/components/grid-item";
-import {
-  ArrowUpOutlined,
-  MoreOutlined,
-  ArrowDownOutlined,
-} from "@ant-design/icons";
-import { Button, Select } from "@/components/form";
+import { MoreOutlined } from "@ant-design/icons";
+import { Button, Dropdown, Select } from "@/components/form";
 import { useMemo } from "react";
 import { useSort } from "@/hook";
 import { setSort } from "@/store/sort/sortSlice";
+import { useDispatch } from "react-redux";
+import { SortFieldEnum, SortModeEnum, SortOrderEnum } from "@/enums/sort";
+import { SortIcon } from "../sort-icon";
+import classNames from "classnames";
 
-export function GridView() {
-  const [{ order, field }, dispatch, data] = useSort();
+type Props = {
+  showDetail?: boolean;
+};
+
+export function GridView({ showDetail }: Props) {
+  const [sort, data] = useSort();
+  const dispatch = useDispatch();
+
+  const { order, field, mode } = sort;
 
   const sortOptions = useMemo(
     () => [
       {
         label: "Sorted by",
         options: [
-          { label: "Name", value: "name" },
-          { label: "Last modified", value: "lastModified" },
+          { label: "Name", value: SortFieldEnum.Name },
+          { label: "Last modified", value: SortFieldEnum.LastModified },
         ],
       },
     ],
     []
   );
 
+  const items: MenuProps["items"] = [
+    {
+      key: "1",
+      type: "group",
+      label: "Show directory",
+      children: [
+        {
+          key: SortModeEnum.Top,
+          label: "On top of",
+        },
+        {
+          key: SortModeEnum.Combine,
+          label: "Combine with file",
+        },
+      ],
+    },
+  ];
+
   const onChange = (value: string) => {
-    dispatch(setSort({ order, field: value }));
+    dispatch(setSort({ ...sort, field: value }));
   };
 
   const onClick = () => {
-    if (order === "ascend") {
-      dispatch(setSort({ order: "descend", field }));
+    if (order === SortOrderEnum.Ascend) {
+      dispatch(setSort({ ...sort, order: SortOrderEnum.Descend }));
     } else {
-      dispatch(setSort({ order: "ascend", field }));
+      dispatch(setSort({ ...sort, order: SortOrderEnum.Ascend }));
     }
   };
 
   return (
     <div className="grid-view">
       <div className="sort">
-        <Button
-          icon={
-            order === "ascend" ? <ArrowUpOutlined /> : <ArrowDownOutlined />
-          }
-          shape="circle"
-          type="text"
-          onClick={onClick}
-        />
+        <Button icon={<SortIcon sortOrder={order} />} onClick={onClick} />
         <Select
           defaultValue={field}
           options={sortOptions}
@@ -56,33 +74,54 @@ export function GridView() {
           bordered={false}
           onChange={onChange}
         />
-        <Button icon={<MoreOutlined />} type="text" shape="circle" />
+        <Dropdown
+          placement="bottomRight"
+          trigger={["click"]}
+          menu={{
+            items,
+            selectable: true,
+            defaultSelectedKeys: [mode],
+            onSelect: ({ key }: any) => {
+              dispatch(setSort({ ...sort, mode: key }));
+            },
+          }}
+        >
+          <Button icon={<MoreOutlined />} />
+        </Dropdown>
       </div>
       <div className="section">
-        <p>Folder</p>
+        <p>{mode === SortModeEnum.Top ? "Folder" : "All items"}</p>
         <Row gutter={[16, 16]}>
-          {data.folders.map((folder) => (
-            <Col key={folder.id} lg={6} md={8} sm={12} xs={24}>
-              <GridItem name={folder.name} hasOptions />
-            </Col>
+          {data?.folders.map((folder) => (
+            <GridItem
+              key={folder.id}
+              type={folder.type}
+              name={folder.name}
+              img={folder.img}
+              showDetail={showDetail}
+              className={classNames({
+                folder: mode === SortModeEnum.Combine,
+              })}
+            />
           ))}
         </Row>
       </div>
-      <div className="section">
-        <p>File</p>
-        <Row gutter={[16, 16]}>
-          {data.files.map((file) => (
-            <Col key={file.id} lg={6} md={8} sm={12} xs={24}>
+      {mode === SortModeEnum.Top && (
+        <div className="section">
+          <p>File</p>
+          <Row gutter={[16, 16]}>
+            {data?.files.map((file) => (
               <GridItem
+                key={file.id}
                 type={file.type}
                 name={file.name}
                 img={file.img}
-                hasOptions
+                showDetail={showDetail}
               />
-            </Col>
-          ))}
-        </Row>
-      </div>
+            ))}
+          </Row>
+        </div>
+      )}
     </div>
   );
 }

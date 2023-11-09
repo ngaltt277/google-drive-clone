@@ -1,17 +1,16 @@
 import type { ColumnsType, TableProps } from "antd/es/table";
 import { Button, Dropdown } from "@/components/form";
-import { MoreOutlined } from "@ant-design/icons";
-import { Table } from "antd";
+import { MenuProps, Table } from "antd";
 import Image from "next/image";
 import RESOURCES from "@/config/resources";
-import {
-  ArrowUpOutlined,
-  ArrowDownOutlined,
-  FolderFilled,
-} from "@ant-design/icons";
+import { FolderFilled, MoreOutlined } from "@ant-design/icons";
 import { useMemo } from "react";
 import { useSort } from "@/hook";
 import { setSort } from "@/store/sort/sortSlice";
+import { useDispatch } from "react-redux";
+import { SortIcon } from "../sort-icon";
+import { SortFieldEnum, SortModeEnum, SortOrderEnum } from "@/enums/sort";
+import { OperatorsDropdown } from "../operators-dropdown";
 
 type File = {
   id: string;
@@ -24,9 +23,35 @@ type File = {
 };
 
 export function ListView() {
-  const [{ order, field }, dispatch, data] = useSort();
+  const [sort, data] = useSort();
+  const dispatch = useDispatch();
+
+  const { order, mode } = sort;
 
   const mergedData = useMemo(() => [...data.folders, ...data.files], [data]);
+
+  const sortDirections = useMemo(
+    () => [SortOrderEnum.Ascend, SortOrderEnum.Descend, SortOrderEnum.Ascend],
+    []
+  );
+
+  const items: MenuProps["items"] = [
+    {
+      key: "1",
+      type: "group",
+      label: "Show directory",
+      children: [
+        {
+          key: SortModeEnum.Top,
+          label: "On top of",
+        },
+        {
+          key: SortModeEnum.Combine,
+          label: "Combine with file",
+        },
+      ],
+    },
+  ];
 
   const renderFileIcon = (record: File) => {
     if (record.type === "folder") {
@@ -35,18 +60,11 @@ export function ListView() {
     return <Image src={RESOURCES[record.type]} alt="file icon" />;
   };
 
-  const renderSortIcon = () => {
-    if (order === "ascend") {
-      return <ArrowUpOutlined />;
-    }
-    return <ArrowDownOutlined />;
-  };
-
   const columns: ColumnsType<File> = [
     {
       title: "Name",
-      dataIndex: "name",
-      key: "name",
+      dataIndex: SortFieldEnum.Name,
+      key: SortFieldEnum.Name,
       render: (_, record) => (
         <div className="title">
           {renderFileIcon(record)}
@@ -55,8 +73,8 @@ export function ListView() {
       ),
       width: 560,
       sorter: () => 0,
-      sortDirections: ["ascend", "descend", "ascend"],
-      sortIcon: renderSortIcon,
+      sortDirections: sortDirections,
+      sortIcon: () => <SortIcon sortOrder={order} />,
     },
     {
       title: "Owner",
@@ -67,37 +85,44 @@ export function ListView() {
           <p className="file-name">{owner}</p>
         </div>
       ),
-      width: 150,
     },
     {
       title: "Last modifiled",
-      dataIndex: "lastModified",
-      key: "lastModified",
+      dataIndex: SortFieldEnum.LastModified,
+      key: SortFieldEnum.LastModified,
       sorter: () => 0,
-      sortIcon: renderSortIcon,
-      sortDirections: ["ascend", "descend", "ascend"],
+      sortIcon: () => <SortIcon sortOrder={order} />,
+      sortDirections: sortDirections,
     },
     {
       title: "File Size",
       dataIndex: "fileSize",
       key: "fileSize",
-      width: 100,
     },
     {
       title: (
-        <Dropdown>
-          <Button icon={<MoreOutlined />} type="text" shape="circle" />
+        <Dropdown
+          placement="bottomRight"
+          trigger={["click"]}
+          menu={{
+            items,
+            selectable: true,
+            defaultSelectedKeys: [mode],
+            onSelect: ({ key }: any) => {
+              dispatch(setSort({ ...sort, mode: key }));
+            },
+          }}
+        >
+          <Button icon={<MoreOutlined />} />
         </Dropdown>
       ),
       key: "action",
-      render: () => (
-        <Button icon={<MoreOutlined />} type="text" shape="circle" />
-      ),
+      render: () => <OperatorsDropdown />,
     },
   ];
 
   const onChange: TableProps<File>["onChange"] = (_, __, sorter: any) => {
-    dispatch(setSort({ order: sorter.order, field: sorter.field }));
+    dispatch(setSort({ ...sort, order: sorter.order, field: sorter.field }));
   };
 
   return (

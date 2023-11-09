@@ -47,8 +47,6 @@ export function RightSidebar() {
         <Button
           size="large"
           icon={<RightOutlined style={{ fontSize: "12px" }} />}
-          type="text"
-          shape="circle"
           onClick={onToggle}
           className="hide-btn"
         />
@@ -58,8 +56,6 @@ export function RightSidebar() {
       <Button
         size="large"
         icon={<LeftOutlined style={{ fontSize: "12px" }} />}
-        type="text"
-        shape="circle"
         onClick={onToggle}
         className="show-btn"
       />
@@ -70,21 +66,10 @@ export function RightSidebar() {
     <div className="right-sidebar">
       <div className={classNames("app-list", { hide: !show })}>
         {appList.map((app) => (
-          <Button
-            key={app.name}
-            size="large"
-            icon={app.icon}
-            type="text"
-            shape="circle"
-          />
+          <Button key={app.name} size="large" icon={app.icon} />
         ))}
         <Divider />
-        <Button
-          size="large"
-          icon={<PlusOutlined />}
-          type="text"
-          shape="circle"
-        />
+        <Button size="large" icon={<PlusOutlined />} />
       </div>
       {renderShowHideButton()}
     </div>

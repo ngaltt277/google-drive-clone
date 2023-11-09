@@ -1,23 +1,33 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { files, folders } from "@/../public/data/folder";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { selectSort } from "@/store/sort/sortSlice";
+import { SortModeEnum, SortOrderEnum } from "@/enums/sort";
 
 export function useSort() {
   const sort = useSelector(selectSort);
-  const dispatch = useDispatch();
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const compareField = (a: any, b: any) => {
+    const { order, field } = sort;
+    if (order === SortOrderEnum.Ascend) {
+      return a[field].localeCompare(b[field]);
+    }
+    return b[field].localeCompare(a[field]);
+  };
 
   const data = useMemo(() => {
-    const { order, field } = sort;
-    if (order === "ascend") {
-      folders.sort((a: any, b: any) => a[field]?.localeCompare(b[field]));
-      files.sort((a: any, b: any) => a[field]?.localeCompare(b[field]));
-    } else {
-      folders.sort((a: any, b: any) => b[field]?.localeCompare(a[field]));
-      files.sort((a: any, b: any) => b[field]?.localeCompare(a[field]));
+    if (sort.mode === SortModeEnum.Top) {
+      folders.sort((a, b) => compareField(a, b));
+      files.sort((a, b) => compareField(a, b));
+      return { folders: [...folders], files: [...files] };
     }
-    return { folders: [...folders], files: [...files] };
-  }, [sort]);
 
-  return [sort, dispatch, data] as const;
+    const combineData = [...folders, ...files].sort((a, b) =>
+      compareField(a, b)
+    );
+    return { folders: [...combineData], files: [] };
+  }, [compareField, sort.mode]);
+
+  return [sort, data] as const;
 }

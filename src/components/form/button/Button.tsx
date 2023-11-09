@@ -16,9 +16,9 @@ type Props = {
 export function Button({
   label,
   icon,
-  type,
+  type = "text",
   size,
-  shape,
+  shape = "circle",
   disabled,
   loading,
   className,

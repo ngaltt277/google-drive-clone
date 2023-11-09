@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import { Select as AntSelect } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
-import classNames from "classnames";
 
 type Option = {
   label?: string;
@@ -23,7 +22,6 @@ type Props = {
   autoFocus?: boolean;
   suffixIcon?: ReactNode;
   popupMatchSelectWidth?: boolean;
-  fullWidth?: boolean;
 };
 
 export function Select({
@@ -41,7 +39,6 @@ export function Select({
   autoFocus,
   suffixIcon = <CaretDownOutlined />,
   popupMatchSelectWidth = false,
-  fullWidth = false,
 }: Props) {
   return (
     <AntSelect
@@ -57,7 +54,6 @@ export function Select({
       placement={placement}
       autoFocus={autoFocus}
       suffixIcon={suffixIcon}
-      className={classNames({ "full-width": fullWidth })}
       popupMatchSelectWidth={popupMatchSelectWidth}
     >
       {children}

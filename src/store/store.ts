@@ -1,21 +1,29 @@
-import { Action, ThunkAction, configureStore } from "@reduxjs/toolkit";
+import {
+  combineReducers,
+  configureStore,
+} from "@reduxjs/toolkit";
 import { sortSlice } from "./sort/sortSlice";
-import { createWrapper } from "next-redux-wrapper";
+import storage from "redux-persist/lib/storage";
+import { persistReducer, persistStore } from "redux-persist";
 
-const store = () => configureStore({
-  reducer: {
-    [sortSlice.name]: sortSlice.reducer,
-  },
-  devTools: true,
+const rootReducer = combineReducers({
+  [sortSlice.name]: sortSlice.reducer,
 });
 
-export type AppStore = ReturnType<typeof store>;
-export type AppState = ReturnType<AppStore["getState"]>;
-export type AppThunk<ReturnType = void> = ThunkAction<
-  ReturnType,
-  AppState,
-  unknown,
-  Action
->;
+const persistConfig = {
+  key: "root",
+  storage,
+};
 
-export const wrapper = createWrapper<AppStore>(store);
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+const setupStore = () =>
+  configureStore({
+    reducer: persistedReducer,
+  });
+
+export type AppStore = ReturnType<typeof setupStore>;
+export type AppState = ReturnType<AppStore["getState"]>;
+
+export const persistor = persistStore(setupStore());
+export const store = setupStore();

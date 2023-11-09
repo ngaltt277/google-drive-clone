@@ -1,6 +1,11 @@
 .grid-view {
   position: relative;
 
+  .folder {
+    min-height: 180px;
+    max-height: 300px;
+  }
+
   .sort {
     display: flex;
     align-items: center;

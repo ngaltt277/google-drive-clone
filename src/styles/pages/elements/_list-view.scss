@@ -12,22 +12,38 @@
   }
 }
 
-th, td {
-    background-color: #fff !important;
-}
+.ant-table-wrapper {
+  .ant-table-thead {
+    > tr > th,
+    th.ant-table-column-sort {
+      background-color: #fff;
+    }
 
-.ant-table-column-sorters {
-  justify-content: flex-start !important;
-  gap: 10px !important;
-
-  .ant-table-column-title {
-    flex: 0;
-    display: inline-block;
+    tr {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: #fff;
+      cursor: default;
+    }
   }
-}
 
-th {
-    position: sticky !important;
-    top: 0;
-    z-index: 100;
+  td.ant-table-column-sort {
+    background: #fff;
+  }
+  .ant-table-column-sorters {
+    justify-content: flex-start;
+    gap: 10px;
+
+    .ant-table-column-title {
+      flex: 0 0 auto;
+      display: inline-block;
+    }
+  }
+
+  .ant-table-tbody {
+    .ant-table-row {
+      cursor: pointer;
+    }
+  }
 }

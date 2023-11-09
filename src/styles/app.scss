@@ -1,6 +1,7 @@
-@import "components/form/button";
+@import "keyframes";
 @import "components/form/input";
 @import "components/form/select";
+@import "components/form/checkbox-group";
 @import "components/header";
 @import "components/modal";
 @import "components/grid-item";
@@ -11,6 +12,7 @@
 @import "pages/elements/grid-view";
 @import "pages/elements/list-view";
 @import "pages/elements/advanced-search";
+@import "pages/elements/detail";
 @import "pages/my-drive-page";
 
 :root {

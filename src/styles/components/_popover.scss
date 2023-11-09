@@ -2,5 +2,20 @@
   inset: 58px auto auto 246px !important;
   max-width: 100vw;
   min-width: 44rem;
-  max-height: 100px;
+
+  .ant-popover-inner {
+    padding: 0;
+  }
+
+  .ant-popover-title {
+    min-height: 20px;
+
+    > button {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      z-index: 10;
+    }
+  }
+
 }

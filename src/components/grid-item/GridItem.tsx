@@ -1,61 +1,65 @@
 import RESOURCES from "@/config/resources";
 import Image from "next/image";
-import { Button } from "../form";
-import { MoreOutlined, FolderFilled } from "@ant-design/icons";
+import { FolderFilled } from "@ant-design/icons";
+import { OperatorsDropdown } from "@/containers/my-drive-container/elements/operators-dropdown";
+import { Col } from "antd";
 
 type Props = {
-  hasOptions?: boolean;
   name?: string;
   type?: string;
   img?: string;
   recommended?: boolean;
+  showDetail?: boolean;
+  className?: string;
 };
 
 export function GridItem({
-  hasOptions,
   name,
   type,
   img,
   recommended = false,
+  showDetail,
+  className,
 }: Props) {
-  
   const renderFileIcon = () => {
-    if (type) {
+    if (img && type) {
       return <Image src={RESOURCES[type]} alt="file icon" />;
     }
     return <FolderFilled style={{ fontSize: "20px" }} />;
-  }
+  };
 
   return (
-    <div className="grid-item">
-      <div className="item-header">
-        <div className="title">
-          {renderFileIcon()}
-          <p className="file-name">{name}</p>
+    <Col
+      lg={showDetail ? 8 : 6}
+      md={showDetail ? 12 : 8}
+      sm={showDetail ? 24 : 12}
+      xs={24}
+      className={className}
+    >
+      <div className="grid-item">
+        <div className="item-header">
+          <div className="title">
+            {renderFileIcon()}
+            <p className="file-name">{name}</p>
+          </div>
+          {!recommended && <OperatorsDropdown />}
         </div>
-        {hasOptions && (
-          <Button
-            icon={<MoreOutlined />}
-            size="large"
-            type="text"
-            shape="circle"
-          />
+
+        <div className="img-container">
+          {img && (
+            <Image
+              src={RESOURCES["IMAGEFiLE"]}
+              alt="file image"
+              className="img"
+            />
+          )}
+        </div>
+        {recommended && (
+          <div className="caption">
+            <p>You opened last week</p>
+          </div>
         )}
       </div>
-      {img && (
-        <div className="img-container">
-          <Image
-            src={RESOURCES["IMAGEFiLE"]}
-            alt="file image"
-            className="img"
-          />
-        </div>
-      )}
-      {recommended && (
-        <div className="caption">
-          <p>You opened last week</p>
-        </div>
-      )}
-    </div>
+    </Col>
   );
 }

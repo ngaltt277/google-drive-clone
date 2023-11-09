@@ -1,15 +1,21 @@
 import { Header } from "@/components/header";
-import { LeftSidebar } from "@/containers/my-drive-container/elements/sidebar/left-sidebar";
-import { RightSidebar } from "./elements/sidebar/right-sidebar";
-import { Content } from "./elements/content";
+import { RightSidebar, LeftSidebar, Content, Detail } from "./elements";
+import { useState } from "react";
 
 export function MyDriveContainer() {
+  const [showDetail, setShowDetail] = useState(false);
+
+  const onToggleShowDetail = () => {
+    setShowDetail(!showDetail);
+  };
+
   return (
     <div className="container">
       <Header />
       <main>
         <LeftSidebar />
-        <Content />
+        <Content onToggleShowDetail={onToggleShowDetail} showDetail={showDetail} />
+        {showDetail && <Detail onHideDetail={onToggleShowDetail} />}
         <RightSidebar />
       </main>
     </div>

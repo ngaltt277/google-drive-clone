@@ -8,7 +8,6 @@
   margin-bottom: 20px;
 
   .content-header {
-    gap: 8px;
     display: flex;
     flex-direction: column;
     gap: 18px;
@@ -19,7 +18,7 @@
       justify-content: space-between;
       align-items: center;
 
-      .broadcrumb {
+      .breadcrumb {
         font-size: 24px;
       }
 
@@ -49,9 +48,6 @@
       gap: 16px;
 
       .recommended-list {
-        display: flex;
-        gap: 16px;
-        flex-wrap: wrap;
         overflow: hidden;
         min-height: 220px;
         max-height: 220px;
