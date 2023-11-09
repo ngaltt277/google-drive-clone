@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { files, folders } from "@/../public/data/folder";
 import { useSelector } from "react-redux";
 import { selectSort } from "@/store/sort/sortSlice";
